@@ -1,0 +1,12 @@
+/*!
+ * You can write copyrights rules here. These rules will be copied into the outputs.
+ */
+
+//@outputDir("erpc_outputs") // output directory
+
+program button_input; // specify name of output files
+
+interface ButtonInput // cover functions for same topic
+{
+    button_handler(in uint8 button, in bool short_press) -> void
+}

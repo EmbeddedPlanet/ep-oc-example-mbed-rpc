@@ -19,7 +19,17 @@ This example was originally tested with the following hardware configuration:
 
 ### Building the Server
 
-Most of the code is already in place to build the server application. All that's left is to generate the erpc server files using the `erpcgen` tool.
+Most of the code is already in place to build the server application. 
+
+First, you will need to execute the following to make sure all the associated dependencies are cloned fully:
+
+```
+mbed deploy
+cd mbed-rpc/erpc
+git checkout add-mbed-os-support
+```
+
+Now all that's left is to generate the erpc server files using the `erpcgen` tool.
 
 To generate the erpc server files, execute the following command:
 

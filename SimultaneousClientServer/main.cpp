@@ -108,7 +108,16 @@ int main(void) {
 
 	// Initialize the shared rpc transport
 	uart_transport.setCrc16(&crc16);
+	
+	// Set up hardware flow control, if needed
+#if CONSOLE_FLOWCONTROL == CONSOLE_FLOWCONTROL_RTS
+	uart_transport.set_flow_control(mbed::SerialBase::RTS, STDIO_UART_RTS, NC);
+#elif CONSOLE_FLOWCONTROL == CONSOLE_FLOWCONTROL_CTS
+	uart_transport.set_flow_control(mbed::SerialBase::CTS, NC, STDIO_UART_CTS);
+#elif CONSOLE_FLOWCONTROL == CONSOLE_FLOWCONTROL_RTSCTS
 	uart_transport.set_flow_control(mbed::SerialBase::RTSCTS, STDIO_UART_RTS, STDIO_UART_CTS);
+#endif
+	
 	xport_arbitrator.setSharedTransport(&uart_transport);
 	xport_arbitrator.setCodec(&codec);
 

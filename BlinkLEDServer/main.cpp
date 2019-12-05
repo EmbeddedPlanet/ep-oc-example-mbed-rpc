@@ -7,6 +7,16 @@
 #include "DynamicMessageBufferFactory.h"
 #include "blink_led_server.h"
 
+/**
+ * Macros for setting console flow control.
+ */
+#define CONSOLE_FLOWCONTROL_RTS     1
+#define CONSOLE_FLOWCONTROL_CTS     2
+#define CONSOLE_FLOWCONTROL_RTSCTS  3
+#define mbed_console_concat_(x) CONSOLE_FLOWCONTROL_##x
+#define mbed_console_concat(x) mbed_console_concat_(x)
+#define CONSOLE_FLOWCONTROL mbed_console_concat(MBED_CONF_TARGET_CONSOLE_UART_FLOW_CONTROL)
+
 mbed::DigitalOut led1(LED1, 1);
 mbed::DigitalOut led2(LED2, 1);
 mbed::DigitalOut led3(LED3, 1);
@@ -41,7 +51,16 @@ int main(void) {
 
 	// Initialize the rpc server
 	uart_transport.setCrc16(&crc16);
+
+	// Set up hardware flow control, if needed
+#if CONSOLE_FLOWCONTROL == CONSOLE_FLOWCONTROL_RTS
+	uart_transport.set_flow_control(mbed::SerialBase::RTS, STDIO_UART_RTS, NC);
+#elif CONSOLE_FLOWCONTROL == CONSOLE_FLOWCONTROL_CTS
+	uart_transport.set_flow_control(mbed::SerialBase::CTS, NC, STDIO_UART_CTS);
+#elif CONSOLE_FLOWCONTROL == CONSOLE_FLOWCONTROL_RTSCTS
 	uart_transport.set_flow_control(mbed::SerialBase::RTSCTS, STDIO_UART_RTS, STDIO_UART_CTS);
+#endif
+	
 	rpc_server.setTransport(&uart_transport);
 	rpc_server.setCodecFactory(&basic_cf);
 	rpc_server.setMessageBufferFactory(&dynamic_mbf);

@@ -1,9 +1,0 @@
-{
-    "target_overrides": {
-	"NRF52840_DK": {
-	    "target.device_has_add": ["I2S"],
-	    "target.extra_labels_remove": ["SOFTDEVICE_COMMON", "SOFTDEVICE_S140_FULL"],
-	    "target.extra_labels_add": ["SOFTDEVICE_NONE"]
-	}
-    }
-}
